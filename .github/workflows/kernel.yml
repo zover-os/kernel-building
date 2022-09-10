@@ -15,13 +15,14 @@ jobs:
       run: wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.15.67.tar.xz
     - name: unpack
       run: tar xvf linux-5.15.67.tar.xz
-    - name: cd to kernel source
-      run: cd linux-5.15.67
     - name: download config
+      working-directory: ./linux-5.15.67
       run: wget -O .config https://github.com/zover-os/configs/raw/main/linux-5.15.67.config
     - name: build kernel
+      working-directory: ./linux-5.15.67
       run: make -j$(nproc --all)
     - name: install modules to dir
+      working-directory: ./linux-5.15.67
       run: |
         mkdir modules
         make INSTALL_MOD_PATH=modules modules_install
@@ -30,5 +31,5 @@ jobs:
       with:
         name: kernel
         path: |
-          arch/x86/boot/bzImage
-          modules.zip
+          ./linux-5.15.67/arch/x86/boot/bzImage
+          ./linux-5.15.67/modules.zip
