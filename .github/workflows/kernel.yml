@@ -11,6 +11,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: install deps
+      run: sudo apt install bison flex libelf-dev libssl-dev -y
     - name: download source
       run: wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.15.67.tar.xz
     - name: unpack
