@@ -20,7 +20,7 @@ jobs:
     - name: download config
       run: wget -O .config https://github.com/zover-os/configs/raw/main/linux-5.15.67.config
     - name: build kernel
-      run: make -j(nproc -all)
+      run: make -j$(nproc -all)
     - name: install modules to dir
       run: |
         mkdir modules
