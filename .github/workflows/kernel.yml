@@ -1,0 +1,35 @@
+name: Build linux kernel for zover-os
+
+on:
+  watch:
+    types: [started]
+
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: download source
+      run: https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.15.67.tar.xz
+    - name: unpack
+      run: tar xvf linux-5.15.67.tar.xz
+    - name: cd to kernel source
+      run: cd linux-5.15.67
+    - name: download config
+      run: wget -O .config https://github.com/zover-os/configs/raw/main/linux-5.15.67.config
+    - name: build kernel
+      run: make -j(nproc -all)
+    - name: install modules to dir
+      run: |
+        mkdir modules
+        make INSTALL_MOD_PATH=modules modules_install
+        zip -r modules.zip modules
+    - uses: actions/upload-artifact@v3
+      with:
+        name: kernel
+        path: |
+          arch/x86/boot/bzImage
+          modules.zip
