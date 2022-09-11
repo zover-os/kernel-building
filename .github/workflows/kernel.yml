@@ -28,9 +28,10 @@ jobs:
       run: |
         mkdir modules
         make INSTALL_MOD_PATH=modules modules_install
+        tar -cvf modules.tar modules
     - uses: actions/upload-artifact@v3
       with:
         name: kernel
         path: |
           ./linux-5.15.67/arch/x86/boot/bzImage
-          ./linux-5.15.67/modules
+          ./linux-5.15.67/modules.tar
