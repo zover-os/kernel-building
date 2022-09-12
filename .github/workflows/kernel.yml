@@ -20,6 +20,9 @@ jobs:
     - name: download config
       working-directory: ./linux-5.15.67
       run: wget -O .config https://github.com/zover-os/configs/raw/main/linux-5.15.67.config
+    - name: apply patches
+      working-directory: ./linux-5.15.67
+      run: for i in ../patches/*.patch; do patch -p1 -i $i; done
     - name: build kernel
       working-directory: ./linux-5.15.67
       run: make -j$(nproc --all)
