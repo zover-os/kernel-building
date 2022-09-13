@@ -1,5 +1,5 @@
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
+--- a/drivers/char/random.c	2022-09-12 20:39:33.437477871 +0700
++++ b/drivers/char/random.c	2022-09-13 09:39:45.461997557 +0700
 @@ -79,7 +79,7 @@
  	CRNG_EARLY = 1, /* At least POOL_EARLY_BITS collected */
  	CRNG_READY = 2  /* Fully initialized with POOL_READY_BITS collected */
@@ -9,3 +9,21 @@
  /* Various types of waiters for crng_init->CRNG_READY transition. */
  static DECLARE_WAIT_QUEUE_HEAD(crng_init_wait);
  static struct fasync_struct *fasync;
+@@ -247,7 +247,7 @@
+ 	unsigned long next_gen;
+ 	u8 key[CHACHA_KEY_SIZE];
+ 
+-	extract_entropy(key, sizeof(key));
++	crng_init = CRNG_READY;
+ 
+ 	/*
+ 	 * We copy the new key into the base_crng, overwriting the old one,
+@@ -262,8 +262,6 @@
+ 		++next_gen;
+ 	WRITE_ONCE(base_crng.generation, next_gen);
+ 	WRITE_ONCE(base_crng.birth, jiffies);
+-	if (!crng_ready())
+-		crng_init = CRNG_READY;
+ 	spin_unlock_irqrestore(&base_crng.lock, flags);
+ 	memzero_explicit(key, sizeof(key));
+ }
